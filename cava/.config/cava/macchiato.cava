@@ -1,5 +1,6 @@
 [color]
-background = '#24273a'
+# background = '#24273a'
+background = '#282c34'
 
 gradient = 1
 
