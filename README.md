@@ -16,4 +16,8 @@ inv link-all
 
 ## Screenshots
 
-![Image](./screenshots/screenshot.png)
+![Desktop](./screenshots/desktop.png)
+
+![Rofi](./screenshots/rofi.png)
+
+![Terminal](./screenshots/terminal.png)
