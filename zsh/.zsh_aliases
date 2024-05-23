@@ -1,0 +1,10 @@
+alias e="echo"
+alias c="clear"
+alias s="source"
+
+alias imgcat="wezterm imgcat"
+
+# python
+alias py="python3"
+alias ipy="ipython3"
+alias calc="/home/duy/projects/Venvs/deep_models/bin/ipython3 -i -c 'from math import *'"
