@@ -195,16 +195,16 @@ screens = [
                 widget.Sep(),
                 widget.Systray(),
                 widget.Sep(),
-                widget.CPU(
-                    format="CPU {freq_current}GHz {load_percent}%",
-                    foreground=palette.yellow.hex,
-                    update_interval=1.0,
-                ),
-                widget.Memory(
-                    format="{MemUsed:.1f}{mm}/{MemTotal:.1f}{mm}",
-                    measure_mem="G",
-                    foreground=palette.yellow.hex,
-                ),
+                # widget.CPU(
+                #     format="CPU {freq_current}GHz {load_percent}%",
+                #     foreground=palette.yellow.hex,
+                #     update_interval=1.0,
+                # ),
+                # widget.Memory(
+                #     format="{MemUsed:.1f}{mm}/{MemTotal:.1f}{mm}",
+                #     measure_mem="G",
+                #     foreground=palette.yellow.hex,
+                # ),
                 # widget.CPUGraph(
                 #     type="box",
                 #     border_width=0,
