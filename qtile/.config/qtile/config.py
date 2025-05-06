@@ -34,9 +34,9 @@ from libqtile.scripts.main import VERSION
 from libqtile.utils import guess_terminal
 from libqtile import extension
 
-from catppuccin import Flavour
+from catppuccin import PALETTE
 
-palette = Flavour.macchiato()
+palette = PALETTE.macchiato.colors
 
 mod = "mod4"
 # terminal = guess_terminal()
@@ -149,6 +149,10 @@ layouts = [
         border_focus_stack=palette.green.hex,
         border_width=4,
     ),
+    # layout.Plasma(
+    #     border_focus=palette.sky.hex,
+    #     border_width=4,
+    # ),
     layout.Max(),
     # layout.Floating(),
     # Try more layouts by unleashing below layouts.
@@ -211,7 +215,7 @@ screens = [
                 #     samples=25,
                 #     graph_color=palette.rosewater.hex,
                 # ),
-                widget.Sep(),
+                # widget.Sep(),
                 widget.PulseVolume(
                     fmt="Volume {}",
                     foreground=palette.sky.hex,
@@ -228,6 +232,7 @@ screens = [
                     foreground=palette.green.hex,
                     low_foreground=palette.red.hex,
                     low_percentage=0.2,
+                    notify_below=0.2,
                 ),
                 widget.Sep(),
                 widget.Clock(
