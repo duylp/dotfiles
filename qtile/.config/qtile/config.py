@@ -309,7 +309,16 @@ wl_input_rules = None
 wmname = f"Qtile {VERSION}"
 
 
+def _update_timezone():
+    for screen in screens:
+        for w in screen.top.widgets:
+            if isinstance(w, widget.Clock):
+                w.use_system_timezone()
+
+
 @hook.subscribe.startup
 def autostart():
     home = os.path.expanduser("~/.config/qtile/scripts/autostart.sh")
     subprocess.call([home])
+
+    _update_timezone()
