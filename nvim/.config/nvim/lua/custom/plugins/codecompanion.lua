@@ -1,29 +1,75 @@
--- https://codecompanion.olimorris.dev
--- https://github.com/olimorris/codecompanion.nvim
-
 return {
   "olimorris/codecompanion.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    "j-hui/fidget.nvim", -- Display status updates
+    {
+      "ravitemer/mcphub.nvim", -- Manage MCP servers
+      cmd = "MCPHub",
+      build = "npm install -g mcp-hub@latest",
+      config = true,
+    },
+    {
+      "Davidyz/VectorCode", -- Index and search code in your repositories
+      version = "*",
+      build = "pipx upgrade vectorcode",
+      dependencies = { "nvim-lua/plenary.nvim" },
+    },
+  },
   opts = {
+    extensions = {
+      mcphub = {
+        callback = "mcphub.extensions.codecompanion",
+        opts = {
+          make_vars = true,
+          make_slash_commands = true,
+          show_result_in_chat = true,
+        },
+      },
+      vectorcode = {
+        opts = {
+          add_tool = true,
+        },
+      },
+    },
     adapters = {
-      copilot = function()
-        return require("codecompanion.adapters").extend("copilot", {
+      openrouter = function()
+        return require("codecompanion.adapters").extend("openai_compatible", {
+          name = "openrouter",
+          formatted_name = "OpenRouter",
+          env = {
+            url = "https://openrouter.ai/api",
+            api_key = "cmd: echo $OPENROUTER_API_KEY",
+            chat_url = "/v1/chat/completions",
+          },
           schema = {
             model = {
-              default = "claude-3.7-sonnet",
+              default = "anthropic/claude-sonnet-4",
             },
           },
         })
       end,
     },
     strategies = {
+      -- Change the default chat adapter
       chat = {
-        adapter = "copilot",
+        adapter = {
+          name = "openrouter",
+          model = "anthropic/claude-sonnet-4",
+        },
       },
       inline = {
-        adapter = "copilot",
+        adapter = {
+          name = "openrouter",
+          model = "anthropic/claude-sonnet-4",
+        },
       },
       cmd = {
-        adapter = "copilot",
+        adapter = {
+          name = "openrouter",
+          model = "anthropic/claude-sonnet-4",
+        },
       },
     },
     opts = {
@@ -31,18 +77,27 @@ return {
       log_level = "DEBUG",
     },
   },
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-treesitter/nvim-treesitter",
+  keys = {
+    {
+      "<Leader>cc",
+      "<cmd>CodeCompanionActions<cr>",
+      desc = "Code Companion Actions",
+      mode = { "n", "v" },
+    },
+    {
+      "<LocalLeader>a",
+      "<cmd>CodeCompanionChat Toggle<cr>",
+      desc = "Toggle Code Companion Chat",
+      mode = { "n", "v" },
+    },
+    {
+      "ga",
+      "<cmd>CodeCompanionChat Add<cr>",
+      desc = "Add Code Companion Chat",
+      mode = "v",
+    },
   },
-  config = function()
-    require("codecompanion").setup()
-
-    vim.keymap.set({ "n", "v" }, "<Leader>cc", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-    vim.keymap.set({ "n", "v" }, "<LocalLeader>a", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
-    vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
-
-    -- Expand 'cc' into 'CodeCompanion' in the command line
+  init = function()
     vim.cmd([[cab cc CodeCompanion]])
     vim.cmd([[cab cca CodeCompanionActions]])
   end,
