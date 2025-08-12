@@ -22,6 +22,9 @@ return {
       mcphub = {
         callback = "mcphub.extensions.codecompanion",
         opts = {
+          make_tools = true,              -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
+          show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
+          add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
           make_vars = true,
           make_slash_commands = true,
           show_result_in_chat = true,
@@ -46,6 +49,7 @@ return {
           schema = {
             model = {
               default = "anthropic/claude-sonnet-4",
+              -- default = "moonshotai/kimi-k2",
             },
           },
         })
@@ -57,18 +61,21 @@ return {
         adapter = {
           name = "openrouter",
           model = "anthropic/claude-sonnet-4",
+          -- model = "moonshotai/kimi-k2",
         },
       },
       inline = {
         adapter = {
           name = "openrouter",
           model = "anthropic/claude-sonnet-4",
+          -- model = "moonshotai/kimi-k2",
         },
       },
       cmd = {
         adapter = {
           name = "openrouter",
           model = "anthropic/claude-sonnet-4",
+          -- model = "moonshotai/kimi-k2",
         },
       },
     },
