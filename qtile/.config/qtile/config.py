@@ -37,7 +37,10 @@ from libqtile.widget import base
 
 from catppuccin import PALETTE
 
+# palette = PALETTE.latte.colors
+# palette = PALETTE.frappe.colors
 palette = PALETTE.macchiato.colors
+# palette = PALETTE.mocha.colors
 
 
 class CustomBattery(base.ThreadPoolText):
@@ -212,8 +215,8 @@ widget_defaults = dict(
     # font="sans",
     font="JetBrainsMono NF SemiBold",
     fontsize=12,
-    padding=3,
-    foreground=palette.text.hex,
+    padding=5,
+    foreground=palette.crust.hex,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -221,11 +224,39 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
-                widget.Prompt(),
-                # widget.WindowName(),
-                widget.TaskList(),
+                widget.CurrentLayout(
+                    foreground=palette.peach.hex,
+                    background=palette.surface1.hex,
+                ),
+                widget.GroupBox(
+                    highlight_method="block",
+                    this_current_screen_border=palette.sky.hex,
+                    this_screen_border=palette.surface2.hex,
+                    active=palette.peach.hex,
+                    inactive=palette.overlay0.hex,
+                    highlight_color=[palette.sky.hex, palette.sky.hex],
+                    block_highlight_text_color=palette.crust.hex,
+                    urgent_border=palette.red.hex,
+                    rounded=True,
+                    borderwidth=2,
+                    padding=3,
+                ),
+                widget.Prompt(
+                    prompt="Run: ",
+                    foreground=palette.text.hex,
+                    cursor_color=palette.sky.hex,
+                    background=palette.surface0.hex,
+                ),
+                widget.TaskList(
+                    border=palette.sky.hex,
+                    unfocused_border=palette.surface2.hex,
+                    urgent_border=palette.red.hex,
+                    borderwidth=2,
+                    highlight_method="block",
+                    padding_y=2,
+                    padding_x=5,
+                    max_title_width=200,
+                ),
                 # widget.Chord(
                 #     chords_colors={
                 #         "launch": ("#ff0000", "#ffffff"),
@@ -236,50 +267,46 @@ screens = [
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
-                widget.Sep(),
-                widget.Systray(),
-                widget.Sep(),
+                widget.Systray(
+                    background=palette.teal.hex,
+                    icon_size=20,
+                ),
                 widget.CPU(
                     format="CPU {load_percent:>4.1f}%",
-                    foreground=palette.yellow.hex,
+                    background=palette.peach.hex,
                     update_interval=2.0,
                 ),
-                widget.Sep(),
                 widget.Memory(
                     format="RAM {MemUsed:>4.1f}{mm}",
                     measure_mem="G",
-                    foreground=palette.yellow.hex,
+                    background=palette.yellow.hex,
                     update_interval=2.0,
                 ),
-                widget.Sep(),
                 widget.PulseVolume(
                     fmt="  {}",
-                    foreground=palette.sky.hex,
+                    background=palette.sky.hex,
                     limit_max_volume=True,
                     step=5,
                 ),
-                widget.Sep(),
                 CustomBattery(
                     low_icon=" ",
                     medium_icon=" ",
                     high_icon=" ",
                     low_threshold=33,
                     high_threshold=67,
-                    foreground=palette.green.hex,
+                    background=palette.green.hex,
                     update_interval=60,
                 ),
-                widget.Sep(),
                 widget.Clock(
                     format="  %a %d/%m    %H:%M",
-                    foreground=palette.lavender.hex,
+                    background=palette.lavender.hex,
                 ),
-                widget.Sep(),
                 widget.QuickExit(
-                    foreground=palette.red.hex,
+                    background=palette.red.hex,
                 ),
             ],
             24,
-            background=palette.crust.hex,
+            background=palette.surface0.hex,
             opacity=0.9,
         ),
         wallpaper="/home/duy/Pictures/Wallpapers/forest-sun.jpg",
