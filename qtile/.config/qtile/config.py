@@ -219,14 +219,6 @@ screens = [
                     padding_x=5,
                     max_title_width=200,
                 ),
-                # widget.Chord(
-                #     chords_colors={
-                #         "launch": ("#ff0000", "#ffffff"),
-                #     },
-                #     name_transform=lambda name: name.upper(),
-                # ),
-                # widget.TextBox("default config", name="default"),
-                # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
                 widget.Systray(
@@ -263,18 +255,24 @@ screens = [
                     update_interval=60,
                 ),
                 widget.Clock(
-                    format="  %a %d/%m    %H:%M",
+                    format="  %a %d/%m",
                     background=palette.lavender.hex,
+                ),
+                widget.Clock(
+                    format="  %I:%M %p",
+                    background=palette.text.hex,
                 ),
                 widget.QuickExit(
                     background=palette.red.hex,
+                    default_text=" ",
+                    countdown_format="{}",
                 ),
             ],
             24,
             background=palette.surface0.hex,
             opacity=0.9,
         ),
-        wallpaper="/home/duy/Pictures/Wallpapers/forest-sun.jpg",
+        wallpaper="/home/duy/Pictures/Wallpapers/sunset.jpg",
         wallpaper_mode="stretch",
     ),
 ]
