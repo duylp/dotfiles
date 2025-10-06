@@ -77,6 +77,9 @@ keys = [
     ),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod, "control"], "i", lazy.layout.grow()),
+    Key([mod, "control"], "m", lazy.layout.shrink()),
+    Key([mod, "control"], "n", lazy.layout.reset()),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -92,7 +95,6 @@ keys = [
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
-    Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # rofi
@@ -148,17 +150,33 @@ for i in groups:
     )
 
 layouts = [
-    # layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
-    layout.Columns(
-        border_focus=palette.sky.hex,
-        border_focus_stack=palette.green.hex,
-        border_width=4,
-    ),
+    # layout.Columns(
+    #     border_focus=palette.green.hex,
+    #     border_focus_stack=palette.lavender.hex,
+    #     border_normal=palette.surface2.hex,
+    #     border_normal_stack=palette.surface1.hex,
+    #     border_width=4,
+    #     border_on_single=False,
+    #     margin=5,
+    # ),
     # layout.Plasma(
     #     border_focus=palette.sky.hex,
     #     border_width=4,
     # ),
-    layout.Max(),
+    layout.MonadTall(
+        border_focus=palette.green.hex,
+        border_normal=palette.surface2.hex,
+        border_width=4,
+        single_border_width=0,
+        margin=8,
+        ratio=0.6,
+    ),
+    layout.Max(
+        border_focus=palette.peach.hex,
+        border_normal=palette.surface2.hex,
+        border_width=0,
+        margin=0,
+    ),
     # layout.Floating(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
@@ -231,7 +249,7 @@ screens = [
                     update_interval=2.0,
                 ),
                 widget.Memory(
-                    format="RAM {MemUsed:>4.1f}{mm}",
+                    format="Mem {MemUsed:>4.1f}{mm}",
                     measure_mem="G",
                     background=palette.yellow.hex,
                     update_interval=2.0,
