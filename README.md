@@ -18,6 +18,4 @@ inv link-all
 
 ![Desktop](./screenshots/desktop.png)
 
-![Rofi](./screenshots/rofi.png)
-
 ![Terminal](./screenshots/terminal.png)
