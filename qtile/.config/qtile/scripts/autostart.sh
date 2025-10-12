@@ -5,3 +5,4 @@ picom -b &
   flameshot &
   nm-applet &
   ibus-daemon -dr &
+  autorandr --change &

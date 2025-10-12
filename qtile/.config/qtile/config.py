@@ -104,6 +104,12 @@ keys = [
         lazy.spawn("rofi -i -show drun -modi drun -show-icons"),
         desc="Rofi app launcher",
     ),
+    Key(
+        [mod],
+        "p",
+        lazy.spawn(os.path.expanduser("~/.config/qtile/scripts/rofi-autorandr.sh")),
+        desc="Rofi autorandr profile selector",
+    ),
     # kill binding
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     # Volume
