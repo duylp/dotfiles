@@ -36,48 +36,69 @@ return {
         },
       },
     },
+    display = {
+      chat = {
+        window = {
+          layout = "vertical", -- float|vertical|horizontal|buffer
+          height = 1.0,
+          width = 0.5,
+        },
+      },
+      diff = {
+        provider_opts = {
+          inline = {
+              layout = "buffer", -- "buffer" | "float"
+          },
+        },
+      },
+    },
     adapters = {
-      openrouter = function()
-        return require("codecompanion.adapters").extend("openai_compatible", {
-          name = "openrouter",
-          formatted_name = "OpenRouter",
-          env = {
-            url = "https://openrouter.ai/api",
-            api_key = "cmd: echo $OPENROUTER_API_KEY",
-            chat_url = "/v1/chat/completions",
-          },
-          schema = {
-            model = {
-              default = "anthropic/claude-sonnet-4",
-              -- default = "moonshotai/kimi-k2",
+      http = {
+        openrouter = function()
+          return require("codecompanion.adapters").extend("openai_compatible", {
+            name = "openrouter",
+            formatted_name = "OpenRouter",
+            env = {
+              url = "https://openrouter.ai/api",
+              api_key = "cmd: echo $OPENROUTER_API_KEY",
+              chat_url = "/v1/chat/completions",
             },
-          },
-        })
-      end,
+              schema = {
+                model = {
+                  default = "anthropic/claude-sonnet-4.5",
+                },
+              },
+          })
+        end,
+      },
     },
     strategies = {
       -- Change the default chat adapter
-      chat = {
-        adapter = {
-          name = "openrouter",
-          model = "anthropic/claude-sonnet-4",
-          -- model = "moonshotai/kimi-k2",
+        chat = {
+          tools = {
+            opts = {
+              auto_submit_errors = true,  -- Send any errors to the LLM automatically
+              auto_submit_success = true, -- Send any successful output to the LLM automatically
+            },
+          },
+          adapter = {
+            name = "openrouter",
+            model = "anthropic/claude-sonnet-4.5",
+
+          },
         },
-      },
-      inline = {
-        adapter = {
-          name = "openrouter",
-          model = "anthropic/claude-sonnet-4",
-          -- model = "moonshotai/kimi-k2",
+        inline = {
+          adapter = {
+            name = "openrouter",
+            model = "anthropic/claude-sonnet-4.5",
+          },
         },
-      },
-      cmd = {
-        adapter = {
-          name = "openrouter",
-          model = "anthropic/claude-sonnet-4",
-          -- model = "moonshotai/kimi-k2",
+        cmd = {
+          adapter = {
+            name = "openrouter",
+            model = "anthropic/claude-sonnet-4.5",
+          },
         },
-      },
     },
     opts = {
       -- Set debug logging
