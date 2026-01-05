@@ -154,6 +154,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- win bar
+vim.opt.winbar = ' %t'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -714,6 +717,12 @@ require('lazy').setup({
           end,
         },
       }
+
+      vim.lsp.config('gdscript', {
+        name = 'godot',
+        cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+      })
+      vim.lsp.enable('gdscript')
     end,
   },
 
@@ -884,6 +893,10 @@ require('lazy').setup({
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+
+      -- fix winbar colors
+      vim.api.nvim_set_hl(0, 'WinBar', { link = 'StatusLine' })
+      vim.api.nvim_set_hl(0, 'WinBarNC', { link = 'StatusLineNC' })
     end,
   },
 
@@ -939,6 +952,7 @@ require('lazy').setup({
         'cpp',
         'diff',
         'dockerfile',
+        'gdscript',
         'html',
         'json',
         'lua',
