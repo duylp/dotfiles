@@ -18,6 +18,13 @@ return {
     },
   },
   opts = {
+    prompt_library = {
+      markdown = {
+        dirs = {
+          "~/.config/nvim/lua/custom/plugins/prompts",
+        },
+      },
+    },
     extensions = {
       mcphub = {
         callback = "mcphub.extensions.codecompanion",
@@ -65,14 +72,14 @@ return {
             },
               schema = {
                 model = {
-                  default = "anthropic/claude-sonnet-4.5",
+                  default = "anthropic/claude-opus-4.5",
                 },
               },
           })
         end,
       },
     },
-    strategies = {
+    interactions = {
       -- Change the default chat adapter
         chat = {
           tools = {
@@ -83,20 +90,20 @@ return {
           },
           adapter = {
             name = "openrouter",
-            model = "anthropic/claude-sonnet-4.5",
+            model = "anthropic/claude-opus-4.5",
 
           },
         },
         inline = {
           adapter = {
             name = "openrouter",
-            model = "anthropic/claude-sonnet-4.5",
+            model = "anthropic/claude-opus-4.5",
           },
         },
         cmd = {
           adapter = {
             name = "openrouter",
-            model = "anthropic/claude-sonnet-4.5",
+            model = "anthropic/claude-opus-4.5",
           },
         },
     },
