@@ -172,3 +172,5 @@ if [[ "$TERM_PROGRAM" == "WezTerm" ]]; then
 	}
 	precmd_functions+=(_wezterm_set_venv_var)
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
