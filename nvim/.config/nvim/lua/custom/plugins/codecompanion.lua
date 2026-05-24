@@ -10,12 +10,12 @@ return {
       build = "npm install -g mcp-hub@latest",
       config = true,
     },
-    {
-      "Davidyz/VectorCode", -- Index and search code in your repositories
-      version = "*",
-      build = "pipx upgrade vectorcode",
-      dependencies = { "nvim-lua/plenary.nvim" },
-    },
+    -- {
+    --   "Davidyz/VectorCode", -- Index and search code in your repositories
+    --   version = "*",
+    --   build = "pipx upgrade vectorcode",
+    --   dependencies = { "nvim-lua/plenary.nvim" },
+    -- },
   },
   opts = {
     prompt_library = {
@@ -32,16 +32,16 @@ return {
           make_tools = true,              -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
           show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
           add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
-          make_vars = true,
+          make_vars = false, -- Disabled: mcphub hasn't updated for codecompanion v18+ (variables -> editor_context)
           make_slash_commands = true,
           show_result_in_chat = true,
         },
       },
-      vectorcode = {
-        opts = {
-          add_tool = true,
-        },
-      },
+      -- vectorcode = {
+      --   opts = {
+      --     add_tool = true,
+      --   },
+      -- },
     },
     display = {
       chat = {
@@ -72,7 +72,7 @@ return {
             },
               schema = {
                 model = {
-                  default = "anthropic/claude-opus-4.5",
+                  default = "anthropic/claude-opus-4.6",
                 },
               },
           })
@@ -90,20 +90,35 @@ return {
           },
           adapter = {
             name = "openrouter",
-            model = "anthropic/claude-opus-4.5",
+            model = "anthropic/claude-opus-4.6",
 
           },
         },
         inline = {
           adapter = {
             name = "openrouter",
-            model = "anthropic/claude-opus-4.5",
+            model = "anthropic/claude-opus-4.6",
           },
         },
         cmd = {
           adapter = {
             name = "openrouter",
-            model = "anthropic/claude-opus-4.5",
+            model = "anthropic/claude-opus-4.6",
+          },
+        },
+        cli = {
+          agent = "claude_code",
+          agents = {
+            claude_code = {
+              cmd = "claude",
+              args = {},
+              description = "Claude Code CLI",
+              provider = "terminal",
+            },
+          },
+          opts = {
+            auto_insert = true, -- Enter insert mode when focusing the CLI terminal
+            reload = true,      -- Reload buffers when an agent modifies files on disk
           },
         },
     },
@@ -121,8 +136,34 @@ return {
     },
     {
       "<LocalLeader>a",
-      "<cmd>CodeCompanionChat Toggle<cr>",
-      desc = "Toggle Code Companion Chat",
+      function()
+        require("codecompanion").toggle()
+      end,
+      desc = "Toggle Code Companion",
+      mode = { "n", "v" },
+    },
+    {
+      "<LocalLeader>cp",
+      function()
+        require("codecompanion").cli({ prompt = true })
+      end,
+      desc = "Prompt CLI agent",
+      mode = { "n", "v" },
+    },
+    {
+      "<LocalLeader>cd",
+      function()
+        require("codecompanion").cli("#{diagnostics} Can you fix these?", { focus = false, submit = true })
+      end,
+      desc = "Send diagnostics to CLI",
+      mode = "n",
+    },
+    {
+      "<LocalLeader>ca",
+      function()
+        require("codecompanion").cli("#{this}", { focus = false })
+      end,
+      desc = "Add context to CLI",
       mode = { "n", "v" },
     },
     {
