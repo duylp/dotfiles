@@ -8,8 +8,8 @@ local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
 
--- config.font = wezterm.font("JetBrains Mono")
-config.font = wezterm.font("JetBrains Mono", { weight = "Bold" })
+-- config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold" })
 
 -- For example, changing the color scheme:
 
