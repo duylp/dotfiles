@@ -110,6 +110,18 @@ keys = [
         lazy.spawn(os.path.expanduser("~/.config/qtile/scripts/rofi-autorandr.sh")),
         desc="Rofi autorandr profile selector",
     ),
+    Key(
+        [mod, "shift"],
+        "p",
+        lazy.spawn(os.path.expanduser("~/.config/qtile/scripts/rofi-pass.sh")),
+        desc="Rofi pass password selector",
+    ),
+    Key(
+        [mod],
+        "m",
+        lazy.spawn(os.path.expanduser("~/.config/qtile/scripts/rofi-menu.sh")),
+        desc="Rofi meta menu",
+    ),
     # kill binding
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     # Volume
