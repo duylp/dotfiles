@@ -31,8 +31,6 @@ from libqtile import bar, layout, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.scripts.main import VERSION
-from libqtile.utils import guess_terminal
-from libqtile import extension
 
 from qtile_extras import widget
 from qtile_extras.widget import modify
@@ -139,7 +137,13 @@ keys = [
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
-    Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
+    # Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key(
+        [mod, "control"],
+        "q",
+        lazy.spawn(os.path.expanduser("~/.config/qtile/scripts/rofi-powermenu.sh")),
+        desc="Rofi power menu",
+    ),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # rofi
     Key(
@@ -382,10 +386,22 @@ screens = [
                     decorations=pill(),
                 ),
                 gap(),
-                widget.QuickExit(
+                # widget.QuickExit(
+                #     foreground=palette.red.hex,
+                #     default_text=" ",
+                #     countdown_format="{}",
+                #     decorations=pill(),
+                # ),
+                widget.TextBox(
+                    text=" ",
                     foreground=palette.red.hex,
-                    default_text=" ",
-                    countdown_format="{}",
+                    mouse_callbacks={
+                        "Button1": lazy.spawn(
+                            os.path.expanduser(
+                                "~/.config/qtile/scripts/rofi-powermenu.sh"
+                            )
+                        ),
+                    },
                     decorations=pill(),
                 ),
                 gap(),
