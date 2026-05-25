@@ -27,15 +27,59 @@
 import os
 import subprocess
 
-from libqtile import bar, layout, widget, hook
+from libqtile import bar, layout, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.scripts.main import VERSION
 from libqtile.utils import guess_terminal
 from libqtile import extension
 
+from qtile_extras import widget
+from qtile_extras.widget import modify
+from qtile_extras.widget.decorations import RectDecoration
+
 from catppuccin import PALETTE
 from widgets import CustomBattery, CustomPulseVolume
+
+# Inject decoration support into custom widgets so they can use RectDecoration.
+modify(CustomBattery, initialise=False)
+modify(CustomPulseVolume, initialise=False)
+
+
+def _patch_textbox_vertical_centering():
+    """Remove libqtile's hardcoded +1 y-offset so text centers in the pill."""
+    from libqtile.widget import base as _qbase
+    from libqtile import bar as _qbar
+
+    def draw(self):
+        if not self.can_draw():
+            return
+        self.drawer.clear(self.background or self.bar.background)
+        self.drawer.ctx.save()
+        self.rotate_drawer()
+        if self._should_scroll:
+            h = self.bar.size if self.bar.horizontal or self.rotate else self.length
+            self.drawer.ctx.rectangle(0, 0, self._scroll_width, h)
+            self.drawer.ctx.clip()
+        if not self.bar.horizontal and not self.rotate:
+            x, y = 0, self.padding
+        else:
+            x = self.padding if self.length_type != _qbar.STATIC else 0
+            y = (self.bar.size - self.layout.height) / 2
+        self.layout.draw(x - self._scroll_offset, y)
+        self.drawer.ctx.restore()
+        self.draw_at_default_position()
+        if self._should_scroll and self._is_scrolling and not self._scroll_queued:
+            self._scroll_queued = True
+            interval = (
+                self.scroll_delay if self._scroll_offset == 0 else self.scroll_interval
+            )
+            self._scroll_timer = self.timeout_add(interval, self.do_scroll)
+
+    _qbase._TextBox.draw = draw
+
+
+_patch_textbox_vertical_centering()
 
 # palette = PALETTE.latte.colors
 # palette = PALETTE.frappe.colors
@@ -45,7 +89,7 @@ palette = PALETTE.macchiato.colors
 
 mod = "mod4"
 # terminal = guess_terminal()
-terminal = "/home/duy/bin/wezterm"
+terminal = "/usr/bin/wezterm"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -210,22 +254,64 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    # font="sans",
     font="JetBrainsMono NF SemiBold",
     fontsize=12,
-    padding=5,
-    foreground=palette.crust.hex,
+    padding=8,
+    foreground=palette.text.hex,
 )
 extension_defaults = widget_defaults.copy()
+
+# Pill styling: dark crust with ~80% alpha so the wallpaper bleeds through.
+# PILL_BG = palette.crust.hex + "cc"
+PILL_BG = palette.surface0.hex + "cc"
+PILL_RADIUS = 8
+
+
+def pill(colour=PILL_BG):
+    return [
+        RectDecoration(
+            colour=colour,
+            radius=PILL_RADIUS,
+            filled=True,
+            padding_y=2,
+        )
+    ]
+
+
+def gap(length=6):
+    return widget.Spacer(length=length)
+
 
 screens = [
     Screen(
         top=bar.Bar(
             [
+                gap(),
                 widget.CurrentLayout(
+                    mode="icon",
+                    scale=0.75,
                     foreground=palette.peach.hex,
-                    background=palette.surface1.hex,
+                    decorations=pill(),
                 ),
+                gap(),
+                widget.Prompt(
+                    prompt="Run: ",
+                    cursor_color=palette.sky.hex,
+                    decorations=pill(),
+                ),
+                widget.TaskList(
+                    border=palette.sky.hex,
+                    unfocused_border=palette.surface2.hex,
+                    urgent_border=palette.red.hex,
+                    borderwidth=2,
+                    highlight_method="border",
+                    padding_y=2,
+                    padding_x=5,
+                    max_title_width=200,
+                    stretch=False,
+                    decorations=pill(),
+                ),
+                widget.Spacer(),
                 widget.GroupBox(
                     highlight_method="block",
                     this_current_screen_border=palette.sky.hex,
@@ -238,78 +324,77 @@ screens = [
                     rounded=True,
                     borderwidth=2,
                     padding=3,
+                    decorations=pill(),
                 ),
-                widget.Prompt(
-                    prompt="Run: ",
-                    foreground=palette.text.hex,
-                    cursor_color=palette.sky.hex,
-                    background=palette.surface0.hex,
-                ),
-                widget.TaskList(
-                    border=palette.sky.hex,
-                    unfocused_border=palette.surface2.hex,
-                    urgent_border=palette.red.hex,
-                    borderwidth=2,
-                    highlight_method="block",
-                    padding_y=2,
-                    padding_x=5,
-                    max_title_width=200,
-                ),
+                widget.Spacer(),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
                 widget.Systray(
-                    background=palette.teal.hex,
                     icon_size=20,
                 ),
+                gap(),
                 widget.CPU(
                     format="CPU {load_percent:>4.1f}%",
-                    background=palette.peach.hex,
+                    foreground=palette.peach.hex,
                     update_interval=2.0,
+                    decorations=pill(),
                 ),
+                gap(),
                 widget.Memory(
                     format="Mem {MemUsed:>4.1f}{mm}",
                     measure_mem="G",
-                    background=palette.yellow.hex,
+                    foreground=palette.yellow.hex,
                     update_interval=2.0,
+                    decorations=pill(),
                 ),
+                gap(),
                 CustomPulseVolume(
                     mute_icon=" ",
                     low_icon=" ",
                     high_icon=" ",
                     threshold=50,
-                    background=palette.sky.hex,
+                    foreground=palette.sky.hex,
                     limit_max_volume=True,
                     step=5,
+                    decorations=pill(),
                 ),
+                gap(),
                 CustomBattery(
                     low_icon=" ",
                     medium_icon=" ",
                     high_icon=" ",
                     low_threshold=33,
                     high_threshold=67,
-                    background=palette.green.hex,
+                    foreground=palette.green.hex,
                     update_interval=60,
+                    decorations=pill(),
                 ),
+                gap(),
                 widget.Clock(
                     format="  %a %d/%m",
-                    background=palette.lavender.hex,
+                    foreground=palette.lavender.hex,
+                    decorations=pill(),
                 ),
+                gap(),
                 widget.Clock(
                     format="  %I:%M %p",
-                    background=palette.text.hex,
+                    decorations=pill(),
                 ),
+                gap(),
                 widget.QuickExit(
-                    background=palette.red.hex,
+                    foreground=palette.red.hex,
                     default_text=" ",
                     countdown_format="{}",
+                    decorations=pill(),
                 ),
+                gap(),
             ],
-            24,
-            background=palette.surface0.hex,
-            opacity=0.9,
+            28,
+            background="#00000000",
+            margin=[4, 8, 0, 8],
         ),
-        wallpaper="/home/duy/Pictures/Wallpapers/sunset.jpg",
-        wallpaper_mode="stretch",
+        # wallpaper="/home/duy/Pictures/wallpapers/halo.png",
+        wallpaper="/home/duy/Pictures/wallpapers/reze.jpg",
+        wallpaper_mode="fill",
     ),
 ]
 
