@@ -39,7 +39,7 @@ from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import RectDecoration
 
 from catppuccin import PALETTE
-from widgets import CustomBattery, CustomPulseVolume
+from widgets import HAS_BATTERY, CustomBattery, CustomPulseVolume
 
 # Inject decoration support into custom widgets so they can use RectDecoration.
 modify(CustomBattery, initialise=False)
@@ -357,17 +357,19 @@ screens = [
                     step=5,
                     decorations=pill(),
                 ),
-                gap(),
-                CustomBattery(
-                    low_icon=" ",
-                    medium_icon=" ",
-                    high_icon=" ",
-                    low_threshold=33,
-                    high_threshold=67,
-                    foreground=palette.green.hex,
-                    update_interval=60,
-                    decorations=pill(),
-                ),
+                *([
+                    gap(),
+                    CustomBattery(
+                        low_icon=" ",
+                        medium_icon=" ",
+                        high_icon=" ",
+                        low_threshold=33,
+                        high_threshold=67,
+                        foreground=palette.green.hex,
+                        update_interval=60,
+                        decorations=pill(),
+                    ),
+                ] if HAS_BATTERY else []),
                 gap(),
                 widget.Clock(
                     format="  %a %d/%m",

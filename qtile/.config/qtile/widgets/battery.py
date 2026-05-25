@@ -1,4 +1,9 @@
+import glob
+
 from libqtile.widget import base
+
+
+HAS_BATTERY = bool(glob.glob("/sys/class/power_supply/BAT*"))
 
 
 class CustomBattery(base.BackgroundPoll):
