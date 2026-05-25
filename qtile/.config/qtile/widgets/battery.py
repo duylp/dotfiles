@@ -1,7 +1,7 @@
 from libqtile.widget import base
 
 
-class CustomBattery(base.ThreadPoolText):
+class CustomBattery(base.BackgroundPoll):
     """Custom battery widget with configurable icons for different battery levels."""
 
     defaults = [
@@ -15,7 +15,7 @@ class CustomBattery(base.ThreadPoolText):
     ]
 
     def __init__(self, **config):
-        base.ThreadPoolText.__init__(self, "", **config)
+        base.BackgroundPoll.__init__(self, "", **config)
         self.add_defaults(CustomBattery.defaults)
 
     def poll(self):
