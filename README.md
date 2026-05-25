@@ -17,5 +17,3 @@ inv link-all
 ## Screenshots
 
 ![Desktop](./screenshots/desktop.png)
-
-![Terminal](./screenshots/terminal.png)
