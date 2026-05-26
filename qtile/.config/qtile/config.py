@@ -257,9 +257,27 @@ layouts = [
     # layout.Zoomy(),
 ]
 
+PROFILES = {
+    "small": dict(
+        fontsize=12,
+        bar_height=28,
+        current_layout_scale=0.75,
+        tasklist_margin_y=2,
+        tasklist_icon_size=15,
+    ),
+    "medium": dict(
+        fontsize=13,
+        bar_height=32,
+        current_layout_scale=0.6,
+        tasklist_margin_y=5,
+        tasklist_icon_size=18,
+    ),
+}
+PROFILE = PROFILES["medium"]
+
 widget_defaults = dict(
     font="JetBrainsMono NF SemiBold",
-    fontsize=12,
+    fontsize=PROFILE["fontsize"],
     padding=8,
     foreground=palette.text.hex,
 )
@@ -293,7 +311,7 @@ screens = [
                 gap(),
                 widget.CurrentLayout(
                     mode="icon",
-                    scale=0.75,
+                    scale=PROFILE["current_layout_scale"],
                     foreground=palette.peach.hex,
                     decorations=pill(),
                 ),
@@ -309,10 +327,12 @@ screens = [
                     urgent_border=palette.red.hex,
                     borderwidth=2,
                     highlight_method="border",
+                    margin_y=PROFILE["tasklist_margin_y"],
                     padding_y=2,
                     padding_x=5,
                     max_title_width=200,
                     stretch=False,
+                    icon_size=PROFILE["tasklist_icon_size"],
                     decorations=pill(),
                 ),
                 widget.Spacer(),
@@ -406,7 +426,7 @@ screens = [
                 ),
                 gap(),
             ],
-            28,
+            PROFILE["bar_height"],
             background="#00000000",
             margin=[4, 8, 0, 8],
         ),
