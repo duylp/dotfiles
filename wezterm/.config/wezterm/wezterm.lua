@@ -54,6 +54,26 @@ local function nav(key)
 	}
 end
 
+-- Read VIRTUAL_ENV exposed by the shell via OSC 1337 SetUserVar (see zshrc).
+local function get_venv(pane)
+	local user_vars = pane:get_user_vars()
+	local v = user_vars and user_vars.VIRTUAL_ENV
+	if v == nil or v == "" then
+		return nil
+	end
+	return v
+end
+
+local function split_with_venv(direction)
+	return wezterm.action_callback(function(_, pane)
+		local venv = get_venv(pane)
+		local new_pane = pane:split({ direction = direction, domain = "CurrentPaneDomain" })
+		if venv then
+			new_pane:send_text("source " .. venv .. "/bin/activate\n")
+		end
+	end)
+end
+
 config.keys = {
 	-- Navigator.nvim: seamless Ctrl+hjkl navigation between Neovim and WezTerm panes
 	nav("h"),
@@ -68,8 +88,8 @@ config.keys = {
 	{ mods = "LEADER", key = "p", action = act.ActivateCommandPalette },
 	{ mods = "CTRL", key = "f", action = act.Search({ CaseSensitiveString = "" }) },
 	-- multiplexing keymap
-	{ key = "%", mods = "LEADER|SHIFT", action = act({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
-	{ key = '"', mods = "LEADER|SHIFT", action = act({ SplitVertical = { domain = "CurrentPaneDomain" } }) },
+	{ key = "%", mods = "LEADER|SHIFT", action = split_with_venv("Right") },
+	{ key = '"', mods = "LEADER|SHIFT", action = split_with_venv("Bottom") },
 	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
 	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
 	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
@@ -80,27 +100,17 @@ config.keys = {
 	{ key = "l", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
 	{ key = "x", mods = "LEADER", action = act.CloseCurrentPane({ confirm = true }) },
 	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
-	-- Coding session: left = nvim, top-right = claude, bottom-right = terminal
+	-- Launch claude in a new right-side pane, activating the parent's venv first.
 	{
-		key = "s",
+		key = "c",
 		mods = "LEADER",
 		action = wezterm.action_callback(function(_, pane)
-			-- Split right half for claude + terminal
-			local right = pane:split({
-				direction = "Right",
-				size = 0.4,
-			})
-			-- Split the right half to create the bottom terminal
-			-- right:split({
-			-- 	direction = "Bottom",
-			-- 	size = 0.4,
-			-- })
-			-- Launch claude in top-right
+			local venv = get_venv(pane)
+			local right = pane:split({ direction = "Right", size = 0.4, domain = "CurrentPaneDomain" })
+			if venv then
+				right:send_text("source " .. venv .. "/bin/activate\n")
+			end
 			right:send_text("claude\n")
-			-- Launch nvim in the left (original) pane
-			pane:send_text("nvim\n")
-			-- Focus the nvim pane
-			pane:activate()
 		end),
 	},
 	-- Workspace management

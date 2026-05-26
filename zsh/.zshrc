@@ -164,3 +164,11 @@ eval "$(zoxide init --cmd cd zsh)"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export SUDO_EDITOR="nvim"
+
+# WezTerm: expose $VIRTUAL_ENV as a user var so pane splits can re-activate it.
+if [[ "$TERM_PROGRAM" == "WezTerm" ]]; then
+	_wezterm_set_venv_var() {
+		printf '\e]1337;SetUserVar=VIRTUAL_ENV=%s\a' "$(print -n "${VIRTUAL_ENV:-}" | base64)"
+	}
+	precmd_functions+=(_wezterm_set_venv_var)
+fi
