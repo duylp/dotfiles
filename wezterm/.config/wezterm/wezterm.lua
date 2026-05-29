@@ -88,8 +88,8 @@ config.keys = {
 	{ mods = "LEADER", key = "p", action = act.ActivateCommandPalette },
 	{ mods = "CTRL", key = "f", action = act.Search({ CaseSensitiveString = "" }) },
 	-- multiplexing keymap
-	{ key = "%", mods = "LEADER|SHIFT", action = split_with_venv("Right") },
-	{ key = '"', mods = "LEADER|SHIFT", action = split_with_venv("Bottom") },
+	{ key = "\\", mods = "LEADER", action = split_with_venv("Right") },
+	{ key = "-", mods = "LEADER", action = split_with_venv("Bottom") },
 	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
 	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
 	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
