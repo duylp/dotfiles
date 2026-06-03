@@ -85,7 +85,7 @@ config.keys = {
 	-- { mods = "CTRL", key = "=", action = act.IncreaseFontSize },
 	-- { mods = "CTRL", key = "-", action = act.DecreaseFontSize },
 	-- { mods = "CTRL", key = "0", action = act.ResetFontSize },
-	{ mods = "LEADER", key = "p", action = act.ActivateCommandPalette },
+	{ mods = "LEADER|SHIFT", key = "P", action = act.ActivateCommandPalette },
 	{ mods = "CTRL", key = "f", action = act.Search({ CaseSensitiveString = "" }) },
 	-- multiplexing keymap
 	{ key = "\\", mods = "LEADER", action = split_with_venv("Right") },
@@ -112,6 +112,32 @@ config.keys = {
 			end
 			right:send_text("claude\n")
 		end),
+	},
+	-- Tab management
+	{ key = "t", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
+	{ key = "p", mods = "LEADER", action = act.ActivateTabRelative(-1) },
+	{ key = "1", mods = "LEADER", action = act.ActivateTab(0) },
+	{ key = "2", mods = "LEADER", action = act.ActivateTab(1) },
+	{ key = "3", mods = "LEADER", action = act.ActivateTab(2) },
+	{ key = "4", mods = "LEADER", action = act.ActivateTab(3) },
+	{ key = "5", mods = "LEADER", action = act.ActivateTab(4) },
+	{ key = "6", mods = "LEADER", action = act.ActivateTab(5) },
+	{ key = "7", mods = "LEADER", action = act.ActivateTab(6) },
+	{ key = "8", mods = "LEADER", action = act.ActivateTab(7) },
+	{ key = "9", mods = "LEADER", action = act.ActivateTab(8) },
+	{ key = "&", mods = "LEADER|SHIFT", action = act.CloseCurrentTab({ confirm = true }) },
+	{
+		key = ",",
+		mods = "LEADER",
+		action = act.PromptInputLine({
+			description = "Enter new tab name:",
+			action = wezterm.action_callback(function(window, _, line)
+				if line then
+					window:active_tab():set_title(line)
+				end
+			end),
+		}),
 	},
 	-- Workspace management
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
