@@ -1022,7 +1022,7 @@ require('lazy').setup({
   require 'custom.plugins.codecompanion',
   require 'custom.plugins.snacks',
   require 'custom.plugins.render-markdown',
-  require 'custom.plugins.copilot',
+  -- require 'custom.plugins.copilot',
   require 'custom.plugins.navigator',
   require 'custom.plugins.claudecode'
 
