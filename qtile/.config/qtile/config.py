@@ -469,7 +469,10 @@ floating_layout = layout.Floating(
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
-reconfigure_screens = True
+# Off: a monitor in DPMS standby flaps connected/disconnected, and each
+# reconfigure leaks the widgets' drawer pixmaps in Xorg (qtile#4821).
+# Screens are reconfigured explicitly from scripts/rofi-autorandr.sh instead.
+reconfigure_screens = False
 
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?

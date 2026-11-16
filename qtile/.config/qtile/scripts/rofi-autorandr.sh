@@ -50,6 +50,8 @@ if [ -n "$selected" ]; then
     
     autorandr --load "$profile_name"
     if [ $? -eq 0 ]; then
+        # reconfigure_screens is off in config.py, so tell qtile about the new layout
+        qtile cmd-obj -o root -f reconfigure_screens
         notify-send "Display Profile" "Applied profile: $profile_name" -t 2000
     else
         notify-send "Display Profile" "Failed to apply profile: $profile_name" -u critical
